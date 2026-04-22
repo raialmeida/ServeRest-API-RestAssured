@@ -1,8 +1,0 @@
-target/
-.idea/
-.vscode/
-*.iml
-.codex
-.allure/
-allure-results/
-allure-report/

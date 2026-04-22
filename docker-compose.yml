@@ -1,0 +1,7 @@
+services:
+  test-api-serverest:
+    image: test-api-serverest
+    build: .
+    volumes:
+      - ./allure-results:/app/target/allure-results
+      - ./target/surefire-reports:/app/target/surefire-reports

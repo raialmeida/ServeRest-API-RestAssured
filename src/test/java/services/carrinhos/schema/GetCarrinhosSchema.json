@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "quantidade",
+    "carrinhos"
+  ],
+  "properties": {
+    "quantidade": {
+      "type": "integer"
+    },
+    "carrinhos": {
+      "type": "array"
+    }
+  }
+}

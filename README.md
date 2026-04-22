@@ -4,6 +4,8 @@ Este projeto é um exemplo de como usar RestAssured com JUnit5 em um projeto Mav
 
 Foi utilizado a plataforma de testes de exemplo: [ServeRest](https://serverest.dev/)
 
+Para visualizar o report allure da última execução acesse: [Allure](https://raialmeida.github.io/ServeRest-API-RestAssured/)
+
 ## Serviços cobertos
 
 - login

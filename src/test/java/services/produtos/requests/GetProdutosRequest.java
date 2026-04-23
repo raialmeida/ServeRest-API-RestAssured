@@ -5,7 +5,7 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
-public class GetProdutosRequest extends RequestBase {
+public class GetProdutosRequest {
 
     private GetProdutosRequest() {
     }
@@ -13,7 +13,7 @@ public class GetProdutosRequest extends RequestBase {
     @Step("GET /produtos")
     public static ValidatableResponse executar() {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .get("/produtos")
                 .then();
     }

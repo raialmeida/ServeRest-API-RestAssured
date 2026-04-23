@@ -1,12 +1,12 @@
 package services.carrinhos.requests;
 
 import config.RequestBase;
-import utils.UtilsUsuario;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import utils.UtilsUsuario;
 
-public class PostCarrinhosRequest extends RequestBase {
+public class PostCarrinhosRequest {
 
     private PostCarrinhosRequest() {
     }
@@ -20,7 +20,7 @@ public class PostCarrinhosRequest extends RequestBase {
     @Step("POST /carrinhos")
     public static ValidatableResponse executar(String payload, String token) {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .header("Authorization", token)
                 .body(payload)
                 .post("/carrinhos")

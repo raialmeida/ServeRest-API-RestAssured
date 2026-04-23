@@ -5,7 +5,7 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
-public class PostLoginRequest extends RequestBase {
+public class PostLoginRequest {
 
     private PostLoginRequest() {
     }
@@ -13,7 +13,7 @@ public class PostLoginRequest extends RequestBase {
     @Step("POST /login")
     public static ValidatableResponse executar(String payload) {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .body(payload)
                 .post("/login")
                 .then();

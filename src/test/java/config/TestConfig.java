@@ -7,22 +7,35 @@ import java.util.Properties;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
+import utils.Environment;
 
-public class TestConfig {
+public final class TestConfig {
 
-    static {
-        RestAssured.filters(new AllureRestAssured());
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    private static boolean initialized = false;
+
+    private TestConfig() {
     }
 
-    public static void propertyAllure() {
+    public static synchronized void init() {
+        if (initialized) {
+            return;
+        }
+
+        RestAssured.filters(new AllureRestAssured());
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
         System.setProperty("allure.link.issue.pattern", "https://jira.seu-dominio.com/browse/{}");
         System.setProperty("allure.link.tms.pattern", "https://testrail.seu-dominio.com/cases/view/{}");
 
+        writeAllureEnvironment();
+        initialized = true;
+    }
+
+    private static void writeAllureEnvironment() {
         try {
             Properties props = new Properties();
             props.setProperty("Ambiente", "ServeRest");
-            props.setProperty("BaseURL", RestAssured.baseURI);
+            props.setProperty("BaseURL", Environment.getEnv("baseURI"));
             props.setProperty("OS", System.getProperty("os.name"));
             props.setProperty("User", System.getProperty("user.name"));
 

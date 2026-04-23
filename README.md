@@ -72,7 +72,7 @@ src/test/java
 ```
 ## Pré-requisitos
 
-- Java 17+
+- Java 18+
 - Maven 3.9+
 - Docker / Docker Compose (Opcional)
 

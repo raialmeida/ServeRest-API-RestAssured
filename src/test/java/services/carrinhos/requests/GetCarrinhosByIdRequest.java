@@ -5,7 +5,7 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
-public class GetCarrinhosByIdRequest extends RequestBase {
+public class GetCarrinhosByIdRequest {
 
     private GetCarrinhosByIdRequest() {
     }
@@ -13,7 +13,7 @@ public class GetCarrinhosByIdRequest extends RequestBase {
     @Step("GET /carrinhos/{idCarrinho}")
     public static ValidatableResponse executar(String idCarrinho) {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .pathParam("_id", idCarrinho)
                 .get("/carrinhos/{_id}")
                 .then();

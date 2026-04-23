@@ -5,7 +5,7 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
-public class DeleteUsuariosByIdRequest extends RequestBase {
+public class DeleteUsuariosByIdRequest {
 
     private DeleteUsuariosByIdRequest() {
     }
@@ -13,7 +13,7 @@ public class DeleteUsuariosByIdRequest extends RequestBase {
     @Step("DELETE /usuarios/{idUsuario}")
     public static ValidatableResponse executar(String idUsuario) {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .pathParam("_id", idUsuario)
                 .delete("/usuarios/{_id}")
                 .then();

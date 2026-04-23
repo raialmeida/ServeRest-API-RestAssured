@@ -5,7 +5,7 @@ import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
-public class PutUsuariosByIdRequest extends RequestBase {
+public class PutUsuariosByIdRequest {
 
     private PutUsuariosByIdRequest() {
     }
@@ -13,7 +13,7 @@ public class PutUsuariosByIdRequest extends RequestBase {
     @Step("PUT /usuarios/{idUsuario}")
     public static ValidatableResponse executar(String idUsuario, String payload) {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .pathParam("_id", idUsuario)
                 .body(payload)
                 .put("/usuarios/{_id}")

@@ -1,12 +1,12 @@
 package services.produtos.requests;
 
 import config.RequestBase;
-import utils.UtilsUsuario;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import utils.UtilsUsuario;
 
-public class DeleteProdutosByIdRequest extends RequestBase {
+public class DeleteProdutosByIdRequest {
 
     private DeleteProdutosByIdRequest() {
     }
@@ -20,7 +20,7 @@ public class DeleteProdutosByIdRequest extends RequestBase {
     @Step("DELETE /produtos/{idProduto}")
     public static ValidatableResponse executar(String idProduto, String token) {
         return RestAssured.given()
-                .spec(reqSpec)
+                .spec(RequestBase.spec())
                 .pathParam("_id", idProduto)
                 .header("Authorization", token)
                 .delete("/produtos/{_id}")

@@ -29,6 +29,7 @@
         <profile>
             <id>hml</id>
             <properties>
+                <profile.name>hml</profile.name>
                 <env>src/test/resources/hml.properties</env>
             </properties>
         </profile>
@@ -39,6 +40,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <profile.name>dev</profile.name>
                 <env>src/test/resources/dev.properties</env>
             </properties>
         </profile>
@@ -46,6 +48,7 @@
         <profile>
             <id>staging</id>
             <properties>
+                <profile.name>staging</profile.name>
                 <env>src/test/resources/staging.properties</env>
             </properties>
         </profile>
@@ -157,6 +160,7 @@
                     </includes>
                     <systemPropertyVariables>
                         <env>${env}</env>
+                        <profile.name>${profile.name}</profile.name>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                     </systemPropertyVariables>
                 </configuration>

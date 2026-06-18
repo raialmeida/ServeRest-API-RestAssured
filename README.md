@@ -1,5 +1,4 @@
 # ServeRest Testes Com RestAssured
-
 Este projeto é um exemplo de como usar RestAssured com JUnit5 em um projeto Maven para testar serviços REST.
 
 Foi utilizado a plataforma de testes de exemplo: [ServeRest](https://serverest.dev/)

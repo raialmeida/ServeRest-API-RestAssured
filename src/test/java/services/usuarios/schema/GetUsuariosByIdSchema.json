@@ -8,21 +8,30 @@
     "administrador",
     "_id"
   ],
+  "additionalProperties": false,
   "properties": {
     "nome": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "format": "email"
     },
     "password": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "administrador": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ]
     },
     "_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     }
   }
 }

@@ -5,12 +5,15 @@
     "message",
     "authorization"
   ],
+  "additionalProperties": false,
   "properties": {
     "message": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "authorization": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^Bearer\\s+.+$"
     }
   }
 }

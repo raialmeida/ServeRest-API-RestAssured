@@ -8,21 +8,27 @@
     "quantidade",
     "_id"
   ],
+  "additionalProperties": false,
   "properties": {
     "nome": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "preco": {
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     },
     "descricao": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "quantidade": {
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     },
     "_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     }
   }
 }

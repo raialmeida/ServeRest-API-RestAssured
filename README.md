@@ -96,7 +96,13 @@ mvn test -P staging
 ### Para executar os testes de acordo com a tag no teste
 
 ```
-mvn test -Dgroups=smoke
+mvn test -Dgroups=@smoke
+```
+
+### Para executar os testes baseado nos arquivos de testes
+
+```
+mvn test "-Dtest=PostProdutosTest,PutProdutosByIdTest"
 ```
 
 ### Executando com Docker Compose

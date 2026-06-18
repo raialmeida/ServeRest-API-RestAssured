@@ -12,7 +12,7 @@ public class PutProdutosByIdPayload {
     }
 
     public static String payload() {
-        String nome = fake.commerce().productName();
+        String nome = fake.commerce().productName() + " " + System.nanoTime();
         return payload(nome, 470, "Mouse", 381);
     }
 

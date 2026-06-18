@@ -12,7 +12,7 @@ public class PostProdutosPayload {
     }
 
     public static String payload() {
-        String nome = faker.commerce().productName();
+        String nome = faker.commerce().productName() + " " + System.nanoTime();
         return payload(nome, 470, null, 381);
     }
 

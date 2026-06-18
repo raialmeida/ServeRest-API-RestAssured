@@ -19,7 +19,7 @@ public class DeleteUsuariosByIdTest extends Hooks {
     @DisplayName("Validar exclusão de usuário com sucesso retornando mensagem de confirmação")
     public void validarDeleteUsuariosPorIdComSucesso() {
         String idUsuario = UtilsUsuario.criarUsuario(false).jsonPath().getString("_id");
-        DeleteUsuariosByIdRequest.executar(idUsuario)
+        DeleteUsuariosByIdRequest.enviar(idUsuario)
                 .assertThat()
                 .statusCode(200)
                 .body("message", equalTo("Registro excluído com sucesso"));
@@ -29,7 +29,7 @@ public class DeleteUsuariosByIdTest extends Hooks {
     @DisplayName("Validar contrato da resposta de exclusão de usuário")
     public void validarSchemaDeleteUsuariosPorId() {
         String idUsuario = UtilsUsuario.criarUsuario(false).jsonPath().getString("_id");
-        DeleteUsuariosByIdRequest.executar(idUsuario)
+        DeleteUsuariosByIdRequest.enviar(idUsuario)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/usuarios/schema/DeleteUsuariosByIdSchema.json"));

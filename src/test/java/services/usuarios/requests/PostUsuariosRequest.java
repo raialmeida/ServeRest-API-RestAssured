@@ -11,7 +11,7 @@ public class PostUsuariosRequest {
     }
 
     @Step("POST /usuarios")
-    public static ValidatableResponse executar(String payload) {
+    public static ValidatableResponse enviar(String payload) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .body(payload)

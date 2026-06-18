@@ -21,7 +21,7 @@ public class PutProdutosByIdTest extends Hooks {
     public void validarPutProdutosPorIdComSucesso() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payload = PutProdutosByIdPayload.payload();
-        PutProdutosByIdRequest.executar(idProduto, payload)
+        PutProdutosByIdRequest.enviar(idProduto, payload)
                 .assertThat()
                 .statusCode(200)
                 .body("message", equalTo("Registro alterado com sucesso"));
@@ -32,7 +32,7 @@ public class PutProdutosByIdTest extends Hooks {
     public void validarSchemaPutProdutosPorId() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payload = PutProdutosByIdPayload.payload();
-        PutProdutosByIdRequest.executar(idProduto, payload)
+        PutProdutosByIdRequest.enviar(idProduto, payload)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/produtos/schema/PutProdutosByIdSchema.json"));

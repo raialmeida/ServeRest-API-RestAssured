@@ -18,7 +18,7 @@ public class GetUsuariosTest extends Hooks {
     @DisplayName("Verificar listagem de usuários retornando lista não nula")
     public void validarGetUsuariosComSucesso() {
 
-        GetUsuariosRequest.executar()
+        GetUsuariosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
                 .body("usuarios", notNullValue());
@@ -28,7 +28,7 @@ public class GetUsuariosTest extends Hooks {
     @DisplayName("Validar contrato da resposta de listagem de usuários")
     public void validarSchemaGetUsuarios() {
 
-        GetUsuariosRequest.executar()
+        GetUsuariosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/usuarios/schema/GetUsuariosSchema.json"));

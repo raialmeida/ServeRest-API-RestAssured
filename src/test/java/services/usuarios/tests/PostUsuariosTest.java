@@ -20,7 +20,7 @@ public class PostUsuariosTest extends Hooks {
     @DisplayName("Validar cadastro de usuário com sucesso retornando mensagem e id")
     public void validarPostUsuariosComSucesso() {
         String payload = PostUsuariosPayload.payload();
-        PostUsuariosRequest.executar(payload)
+        PostUsuariosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
                 .body("message", equalTo("Cadastro realizado com sucesso"))
@@ -31,7 +31,7 @@ public class PostUsuariosTest extends Hooks {
     @DisplayName("Validar contrato da resposta de cadastro de usuário")
     public void validarSchemaPostUsuarios() {
         String payload = PostUsuariosPayload.payload();
-        PostUsuariosRequest.executar(payload)
+        PostUsuariosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
                 .body(SchemaValidator.matchesSchema("services/usuarios/schema/PostUsuariosSchema.json"));

@@ -26,7 +26,7 @@ public class UtilsUsuario {
                 ADMIN_PASSWORD,
                 true);
 
-        Response response = PostUsuariosRequest.executar(payload).extract().response();
+        Response response = PostUsuariosRequest.enviar(payload).extract().response();
 
         if (response.statusCode() == 201 || response.statusCode() == 400) {
             return response;
@@ -39,7 +39,7 @@ public class UtilsUsuario {
     @Step("Obtendo token do usuário administrador")
     public static String getTokenAdmin() {
 
-        return PostLoginRequest.executar(PostLoginPayload.payload(ADMIN_EMAIL, ADMIN_PASSWORD))
+        return PostLoginRequest.enviar(PostLoginPayload.payload(ADMIN_EMAIL, ADMIN_PASSWORD))
                 .extract()
                 .path("authorization");
     }
@@ -55,7 +55,7 @@ public class UtilsUsuario {
     @Step("Criando usuário com dados explícitos")
     public static Response criarUsuario(String nome, String email, String password, boolean administrador) {
         String payload = PostUsuariosPayload.payload(nome, email, password, administrador);
-        return PostUsuariosRequest.executar(payload).extract().response();
+        return PostUsuariosRequest.enviar(payload).extract().response();
     }
 
     @Step("Criando usuário com dados explícitos e retornando token")
@@ -66,7 +66,7 @@ public class UtilsUsuario {
                     + response.statusCode() + " Body: " + response.asString());
         }
 
-        return PostLoginRequest.executar(PostLoginPayload.payload(email, password))
+        return PostLoginRequest.enviar(PostLoginPayload.payload(email, password))
                 .extract()
                 .path("authorization");
     }

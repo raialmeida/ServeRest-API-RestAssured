@@ -11,7 +11,7 @@ public class GetCarrinhosRequest {
     }
 
     @Step("GET /carrinhos")
-    public static ValidatableResponse executar() {
+    public static ValidatableResponse enviar() {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .get("/carrinhos")

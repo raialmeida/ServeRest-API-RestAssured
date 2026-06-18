@@ -19,7 +19,7 @@ public class GetUsuariosByIdTest extends Hooks {
     @DisplayName("Verificar consulta de usuário por id retornando o mesmo id solicitado")
     public void validarGetUsuariosPorIdComSucesso() {
         String idUsuario = UtilsUsuario.criarUsuario(false).jsonPath().getString("_id");
-        GetUsuariosByIdRequest.executar(idUsuario)
+        GetUsuariosByIdRequest.enviar(idUsuario)
                 .assertThat()
                 .statusCode(200)
                 .body("_id", equalTo(idUsuario));
@@ -29,7 +29,7 @@ public class GetUsuariosByIdTest extends Hooks {
     @DisplayName("Validar contrato da resposta de consulta de usuário por id")
     public void validarSchemaGetUsuariosPorId() {
         String idUsuario = UtilsUsuario.criarUsuario(false).jsonPath().getString("_id");
-        GetUsuariosByIdRequest.executar(idUsuario)
+        GetUsuariosByIdRequest.enviar(idUsuario)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/usuarios/schema/GetUsuariosByIdSchema.json"));

@@ -18,7 +18,7 @@ public class GetProdutosTest extends Hooks {
     @DisplayName("Verificar listagem de produtos retornando lista não nula")
     public void validarGetProdutosComSucesso() {
 
-        GetProdutosRequest.executar()
+        GetProdutosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
                 .body("produtos", notNullValue());
@@ -28,7 +28,7 @@ public class GetProdutosTest extends Hooks {
     @DisplayName("Validar contrato da resposta de listagem de produtos")
     public void validarSchemaGetProdutos() {
 
-        GetProdutosRequest.executar()
+        GetProdutosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/produtos/schema/GetProdutosSchema.json"));

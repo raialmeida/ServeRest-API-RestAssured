@@ -11,7 +11,7 @@ public class PutUsuariosByIdRequest {
     }
 
     @Step("PUT /usuarios/{idUsuario}")
-    public static ValidatableResponse executar(String idUsuario, String payload) {
+    public static ValidatableResponse enviar(String idUsuario, String payload) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .pathParam("_id", idUsuario)

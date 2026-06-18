@@ -12,13 +12,13 @@ public class DeleteProdutosByIdRequest {
     }
 
     @Step("DELETE /produtos/{idProduto}")
-    public static ValidatableResponse executar(String idProduto) {
+    public static ValidatableResponse enviar(String idProduto) {
         String token = UtilsUsuario.getTokenAdmin();
-        return executar(idProduto, token);
+        return enviar(idProduto, token);
     }
 
     @Step("DELETE /produtos/{idProduto}")
-    public static ValidatableResponse executar(String idProduto, String token) {
+    public static ValidatableResponse enviar(String idProduto, String token) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .pathParam("_id", idProduto)

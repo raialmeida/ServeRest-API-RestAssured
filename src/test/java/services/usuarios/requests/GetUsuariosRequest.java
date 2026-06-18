@@ -11,7 +11,7 @@ public class GetUsuariosRequest {
     }
 
     @Step("GET /usuarios")
-    public static ValidatableResponse executar() {
+    public static ValidatableResponse enviar() {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .get("/usuarios")

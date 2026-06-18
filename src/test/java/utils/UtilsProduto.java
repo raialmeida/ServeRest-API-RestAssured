@@ -13,7 +13,7 @@ public class UtilsProduto {
     @Step("Criando produto dinâmico")
     public static Response criarProduto() {
         String payload = PostProdutosPayload.payload();
-        Response response = PostProdutosRequest.executar(payload)
+        Response response = PostProdutosRequest.enviar(payload)
                 .extract()
                 .response();
 
@@ -28,7 +28,7 @@ public class UtilsProduto {
     @Step("Criando produto dinâmico com token explícito")
     public static Response criarProduto(String token) {
         String payload = PostProdutosPayload.payload();
-        Response response = PostProdutosRequest.executar(payload, token)
+        Response response = PostProdutosRequest.enviar(payload, token)
                 .extract()
                 .response();
 

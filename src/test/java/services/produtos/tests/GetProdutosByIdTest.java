@@ -19,7 +19,7 @@ public class GetProdutosByIdTest extends Hooks {
     @DisplayName("Verificar consulta de produto por id retornando o mesmo id solicitado")
     public void validarGetProdutosPorIdComSucesso() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
-        GetProdutosByIdRequest.executar(idProduto)
+        GetProdutosByIdRequest.enviar(idProduto)
                 .assertThat()
                 .statusCode(200)
                 .body("_id", equalTo(idProduto));
@@ -29,7 +29,7 @@ public class GetProdutosByIdTest extends Hooks {
     @DisplayName("Validar contrato da resposta de consulta de produto por id")
     public void validarSchemaGetProdutosPorId() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
-        GetProdutosByIdRequest.executar(idProduto)
+        GetProdutosByIdRequest.enviar(idProduto)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/produtos/schema/GetProdutosByIdSchema.json"));

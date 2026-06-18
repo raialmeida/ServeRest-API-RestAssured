@@ -22,7 +22,7 @@ public class DeleteCarrinhosConcluirCompraTest extends Hooks {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payloadCarrinho = PostCarrinhosPayload.payload(idProduto);
         
-        DeleteCarrinhosConcluirCompraRequest.executarComCarrinho(payloadCarrinho)
+        DeleteCarrinhosConcluirCompraRequest.enviarComCarrinho(payloadCarrinho)
                 .assertThat()
                 .statusCode(200)
                 .body("message", containsString("sucesso"));
@@ -34,7 +34,7 @@ public class DeleteCarrinhosConcluirCompraTest extends Hooks {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payloadCarrinho = PostCarrinhosPayload.payload(idProduto);
 
-        DeleteCarrinhosConcluirCompraRequest.executarComCarrinho(payloadCarrinho)
+        DeleteCarrinhosConcluirCompraRequest.enviarComCarrinho(payloadCarrinho)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator

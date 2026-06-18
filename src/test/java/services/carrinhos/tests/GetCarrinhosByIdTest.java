@@ -22,10 +22,10 @@ public class GetCarrinhosByIdTest extends Hooks {
     public void validarGetCarrinhosPorIdComSucesso() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payloadCarrinho = PostCarrinhosPayload.payload(idProduto);
-        String idCarrinho = PostCarrinhosRequest.executar(payloadCarrinho).extract().response().jsonPath()
+        String idCarrinho = PostCarrinhosRequest.enviar(payloadCarrinho).extract().response().jsonPath()
                 .getString("_id");
 
-        GetCarrinhosByIdRequest.executar(idCarrinho)
+        GetCarrinhosByIdRequest.enviar(idCarrinho)
                 .assertThat()
                 .statusCode(200)
                 .body("_id", equalTo(idCarrinho));
@@ -36,10 +36,10 @@ public class GetCarrinhosByIdTest extends Hooks {
     public void validarSchemaGetCarrinhosPorId() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payloadCarrinho = PostCarrinhosPayload.payload(idProduto);
-        String idCarrinho = PostCarrinhosRequest.executar(payloadCarrinho).extract().response().jsonPath()
+        String idCarrinho = PostCarrinhosRequest.enviar(payloadCarrinho).extract().response().jsonPath()
                 .getString("_id");
 
-        GetCarrinhosByIdRequest.executar(idCarrinho)
+        GetCarrinhosByIdRequest.enviar(idCarrinho)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/carrinhos/schema/GetCarrinhosByIdSchema.json"));

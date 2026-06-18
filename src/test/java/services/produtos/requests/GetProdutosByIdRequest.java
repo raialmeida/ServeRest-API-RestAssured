@@ -11,7 +11,7 @@ public class GetProdutosByIdRequest {
     }
 
     @Step("GET /produtos/{idProduto}")
-    public static ValidatableResponse executar(String idProduto) {
+    public static ValidatableResponse enviar(String idProduto) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .pathParam("_id", idProduto)

@@ -19,7 +19,7 @@ public class PostLoginTest extends Hooks {
     @DisplayName("Validar login com sucesso retornando mensagem e token de autorização")
     public void validarPostLoginComSucesso() {
         String payload = PostLoginPayload.payload();
-        PostLoginRequest.executar(payload)
+        PostLoginRequest.enviar(payload)
                 .assertThat()
                 .statusCode(200)
                 .body("message", notNullValue())
@@ -30,7 +30,7 @@ public class PostLoginTest extends Hooks {
     @DisplayName("Validar contrato da resposta de login com sucesso")
     public void validarSchemaPostLogin() {
         String payload = PostLoginPayload.payload();
-        PostLoginRequest.executar(payload)
+        PostLoginRequest.enviar(payload)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/login/schema/PostLoginSchema.json"));

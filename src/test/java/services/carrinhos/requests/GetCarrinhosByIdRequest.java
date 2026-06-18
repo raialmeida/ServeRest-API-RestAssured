@@ -11,7 +11,7 @@ public class GetCarrinhosByIdRequest {
     }
 
     @Step("GET /carrinhos/{idCarrinho}")
-    public static ValidatableResponse executar(String idCarrinho) {
+    public static ValidatableResponse enviar(String idCarrinho) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .pathParam("_id", idCarrinho)

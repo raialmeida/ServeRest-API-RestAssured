@@ -19,7 +19,7 @@ public class DeleteProdutosByIdTest extends Hooks {
     @DisplayName("Validar exclusão de produto com sucesso retornando mensagem de confirmação")
     public void validarDeleteProdutosPorIdComSucesso() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
-        DeleteProdutosByIdRequest.executar(idProduto)
+        DeleteProdutosByIdRequest.enviar(idProduto)
                 .assertThat()
                 .statusCode(200)
                 .body("message", equalTo("Registro excluído com sucesso"));
@@ -29,7 +29,7 @@ public class DeleteProdutosByIdTest extends Hooks {
     @DisplayName("Validar contrato da resposta de exclusão de produto")
     public void validarSchemaDeleteProdutosPorId() {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
-        DeleteProdutosByIdRequest.executar(idProduto)
+        DeleteProdutosByIdRequest.enviar(idProduto)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/produtos/schema/DeleteProdutosByIdSchema.json"));

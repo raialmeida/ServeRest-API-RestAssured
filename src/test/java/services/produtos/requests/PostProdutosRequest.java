@@ -12,13 +12,13 @@ public class PostProdutosRequest {
     }
 
     @Step("POST /produtos")
-    public static ValidatableResponse executar(String payload) {
+    public static ValidatableResponse enviar(String payload) {
         String token = UtilsUsuario.getTokenAdmin();
-        return executar(payload, token);
+        return enviar(payload, token);
     }
 
     @Step("POST /produtos")
-    public static ValidatableResponse executar(String payload, String token) {
+    public static ValidatableResponse enviar(String payload, String token) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .header("Authorization", token)

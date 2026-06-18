@@ -25,7 +25,7 @@ public class PostCarrinhosTest extends Hooks {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payload = PostCarrinhosPayload.payload(idProduto);
         
-        PostCarrinhosRequest.executar(payload)
+        PostCarrinhosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
                 .body("message", equalTo("Cadastro realizado com sucesso"))
@@ -38,7 +38,7 @@ public class PostCarrinhosTest extends Hooks {
         String idProduto = UtilsProduto.criarProduto().jsonPath().getString("_id");
         String payload = PostCarrinhosPayload.payload(idProduto);
 
-        PostCarrinhosRequest.executar(payload)
+        PostCarrinhosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
                 .body(SchemaValidator.matchesSchema("services/carrinhos/schema/PostCarrinhosSchema.json"));

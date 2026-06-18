@@ -12,13 +12,13 @@ public class PutProdutosByIdRequest {
     }
 
     @Step("PUT /produtos/{idProduto}")
-    public static ValidatableResponse executar(String idProduto, String payload) {
+    public static ValidatableResponse enviar(String idProduto, String payload) {
         String token = UtilsUsuario.getTokenAdmin();
-        return executar(idProduto, payload, token);
+        return enviar(idProduto, payload, token);
     }
 
     @Step("PUT /produtos/{idProduto}")
-    public static ValidatableResponse executar(String idProduto, String payload, String token) {
+    public static ValidatableResponse enviar(String idProduto, String payload, String token) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .pathParam("_id", idProduto)

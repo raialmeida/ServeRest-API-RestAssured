@@ -16,7 +16,7 @@ public class GetCarrinhosTest extends Hooks {
     @DisplayName("Verificar listagem de carrinhos retornando lista não nula")
     public void validarGetCarrinhosComSucesso() {
 
-        GetCarrinhosRequest.executar()
+        GetCarrinhosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
                 .body("carrinhos", notNullValue());
@@ -26,7 +26,7 @@ public class GetCarrinhosTest extends Hooks {
     @DisplayName("Validar contrato da resposta de listagem de carrinhos")
     public void validarSchemaGetCarrinhos() {
 
-        GetCarrinhosRequest.executar()
+        GetCarrinhosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/carrinhos/schema/GetCarrinhosSchema.json"));

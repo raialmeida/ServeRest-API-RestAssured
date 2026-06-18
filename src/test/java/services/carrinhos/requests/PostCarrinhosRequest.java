@@ -12,13 +12,13 @@ public class PostCarrinhosRequest {
     }
 
     @Step("POST /carrinhos")
-    public static ValidatableResponse executar(String payload) {
+    public static ValidatableResponse enviar(String payload) {
         String token = UtilsUsuario.criarUsuarioEObterToken(false);
-        return executar(payload, token);
+        return enviar(payload, token);
     }
 
     @Step("POST /carrinhos")
-    public static ValidatableResponse executar(String payload, String token) {
+    public static ValidatableResponse enviar(String payload, String token) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .header("Authorization", token)

@@ -12,14 +12,14 @@ public class DeleteCarrinhosCancelarCompraRequest {
     }
 
     @Step("Criar carrinho e DELETE /carrinhos/cancelar-compra")
-    public static ValidatableResponse executarComCarrinho(String payloadCarrinho) {
+    public static ValidatableResponse enviarComCarrinho(String payloadCarrinho) {
         String token = UtilsUsuario.criarUsuarioEObterToken(false);
-        PostCarrinhosRequest.executar(payloadCarrinho, token).assertThat().statusCode(201);
-        return executar(token);
+        PostCarrinhosRequest.enviar(payloadCarrinho, token).assertThat().statusCode(201);
+        return enviar(token);
     }
 
     @Step("DELETE /carrinhos/cancelar-compra")
-    public static ValidatableResponse executar(String token) {
+    public static ValidatableResponse enviar(String token) {
         return RestAssured.given()
                 .spec(RequestBase.spec())
                 .header("Authorization", token)

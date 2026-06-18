@@ -21,7 +21,7 @@ public class PutUsuariosByIdTest extends Hooks {
     public void validarPutUsuariosPorIdComSucesso() {
         String idUsuario = UtilsUsuario.criarUsuario(false).jsonPath().getString("_id");
         String payload = PutUsuariosByIdPayload.payload();
-        PutUsuariosByIdRequest.executar(idUsuario, payload)
+        PutUsuariosByIdRequest.enviar(idUsuario, payload)
                 .assertThat()
                 .statusCode(200)
                 .body("message", equalTo("Registro alterado com sucesso"));
@@ -32,7 +32,7 @@ public class PutUsuariosByIdTest extends Hooks {
     public void validarSchemaPutUsuariosPorId() {
         String idUsuario = UtilsUsuario.criarUsuario(false).jsonPath().getString("_id");
         String payload = PutUsuariosByIdPayload.payload();
-        PutUsuariosByIdRequest.executar(idUsuario, payload)
+        PutUsuariosByIdRequest.enviar(idUsuario, payload)
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator.matchesSchema("services/usuarios/schema/PutUsuariosByIdSchema.json"));

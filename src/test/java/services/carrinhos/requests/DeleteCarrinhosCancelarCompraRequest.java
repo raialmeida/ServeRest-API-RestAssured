@@ -1,8 +1,9 @@
 package services.carrinhos.requests;
 
+import static io.restassured.RestAssured.given;
+
 import config.RequestBase;
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import utils.UtilsUsuario;
 
@@ -20,9 +21,10 @@ public class DeleteCarrinhosCancelarCompraRequest {
 
     @Step("DELETE /carrinhos/cancelar-compra")
     public static ValidatableResponse enviar(String token) {
-        return RestAssured.given()
+        return given()
                 .spec(RequestBase.spec())
                 .header("Authorization", token)
+                .when()
                 .delete("/carrinhos/cancelar-compra")
                 .then();
     }

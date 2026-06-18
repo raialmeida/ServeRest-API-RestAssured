@@ -1,8 +1,9 @@
 package services.produtos.requests;
 
+import static io.restassured.RestAssured.given;
+
 import config.RequestBase;
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
 public class GetProdutosByIdRequest {
@@ -12,9 +13,10 @@ public class GetProdutosByIdRequest {
 
     @Step("GET /produtos/{idProduto}")
     public static ValidatableResponse enviar(String idProduto) {
-        return RestAssured.given()
+        return given()
                 .spec(RequestBase.spec())
                 .pathParam("_id", idProduto)
+                .when()
                 .get("/produtos/{_id}")
                 .then();
     }

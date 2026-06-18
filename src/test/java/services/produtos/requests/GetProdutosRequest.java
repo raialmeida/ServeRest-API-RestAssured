@@ -1,8 +1,9 @@
 package services.produtos.requests;
 
+import static io.restassured.RestAssured.given;
+
 import config.RequestBase;
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 
 public class GetProdutosRequest {
@@ -12,8 +13,9 @@ public class GetProdutosRequest {
 
     @Step("GET /produtos")
     public static ValidatableResponse enviar() {
-        return RestAssured.given()
+        return given()
                 .spec(RequestBase.spec())
+                .when()
                 .get("/produtos")
                 .then();
     }

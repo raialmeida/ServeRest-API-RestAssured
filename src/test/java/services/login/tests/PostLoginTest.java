@@ -1,5 +1,6 @@
 package services.login.tests;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 import org.junit.jupiter.api.DisplayName;
@@ -7,10 +8,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import config.Hooks;
+import io.qameta.allure.Feature;
 import services.login.payloads.PostLoginPayload;
 import services.login.requests.PostLoginRequest;
 import utils.SchemaValidator;
-import io.qameta.allure.Feature;
 
 @DisplayName("Login - POST /login")
 @Feature("Login")
@@ -25,6 +26,7 @@ public class PostLoginTest extends Hooks {
                 .assertThat()
                 .statusCode(200)
                 .body("message", notNullValue())
+                .body("message", equalTo("Login realizado com sucesso"))
                 .body("authorization", notNullValue());
     }
 

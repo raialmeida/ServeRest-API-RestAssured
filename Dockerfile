@@ -5,8 +5,7 @@ FROM maven:3.8.7-openjdk-18-slim
 WORKDIR /app
 
 # Copie o arquivo pom.xml para o contêiner
-COPY ./pom.xml /app
+COPY pom.xml /app/pom.xml
 
 # Copie o código de teste para o contêiner
-COPY pom.xml /app/pom.xml
 COPY src /app/src

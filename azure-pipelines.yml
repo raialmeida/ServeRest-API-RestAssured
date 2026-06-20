@@ -1,0 +1,63 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - "*"
+
+schedules:
+  - cron: "0 10 * * 1-5"
+    displayName: "Scheduled daily"
+    branches:
+      include:
+        - main
+    always: true
+
+variables:
+  DOCKER_COMPOSE_FILE: "$(Build.SourcesDirectory)/docker-compose.yml"
+
+pool:
+  name: Teste
+  demands:
+    - Agent.Name -equals wsl_linux_pc
+
+jobs:
+  - job: Build
+    displayName: "Build"
+    steps:
+      - task: DockerCompose@1
+        displayName: "Build Docker Images"
+        inputs:
+          containerregistrytype: 'Container Registry'
+          action: 'Build services'
+          projectName: 'test-api-serverest'
+          dockerComposeFile: '$(DOCKER_COMPOSE_FILE)'
+          qualifyImageNames: false
+
+  - job: Teste
+    dependsOn: Build
+    condition: succeeded('Build')
+    displayName: "Execução dos testes"
+    steps:
+      - task: DockerCompose@1
+        displayName: "Start Containers and Run Tests"
+        inputs:
+          containerregistrytype: 'Container Registry'
+          action: 'Run a specific service'
+          dockerComposeFile: '$(DOCKER_COMPOSE_FILE)'
+          serviceName: 'test-api-serverest'
+          projectName: 'test-api-serverest'
+          qualifyImageNames: false
+          detached: false
+          containerCommand: 'mvn test'
+
+      - task: PublishAllureReport@1
+        displayName: "Publish allure report"
+        condition: always()
+        inputs:
+          testResultsDir: "$(Build.SourcesDirectory)/allure-results"
+          allureVersion: "2.35.1"
+          reportName: "Report Allure"

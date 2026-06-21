@@ -18,6 +18,8 @@ schedules:
 
 variables:
   DOCKER_COMPOSE_FILE: "$(Build.SourcesDirectory)/docker-compose.yml"
+  PIPELINE_USER: "$(Build.RequestedFor)"
+  PIPELINE_USER_EMAIL: "$(Build.RequestedForEmail)"
 
 pool:
   name: Teste

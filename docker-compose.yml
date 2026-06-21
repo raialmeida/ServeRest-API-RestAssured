@@ -7,6 +7,8 @@ services:
       HOME: /tmp
       MAVEN_CONFIG: /tmp/.m2
       MAVEN_OPTS: "-Duser.home=/tmp"
+      PIPELINE_USER: "${PIPELINE_USER:-local}"
+      PIPELINE_USER_EMAIL: "${PIPELINE_USER_EMAIL:-unknown}"
     volumes:
       - ./allure-results:/app/target/allure-results
       - ./target/surefire-reports:/app/target/surefire-reports

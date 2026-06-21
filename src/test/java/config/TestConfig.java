@@ -37,7 +37,8 @@ public final class TestConfig {
             props.setProperty("Ambiente", System.getProperty("profile.name"));
             props.setProperty("BaseURL", Environment.getEnv("baseURI"));
             props.setProperty("OS", System.getProperty("os.name"));
-            props.setProperty("User", System.getProperty("user.name"));
+            props.setProperty("User", getEnvOrDefault("PIPELINE_USER", System.getProperty("user.name")));
+            props.setProperty("UserEmail", getEnvOrDefault("PIPELINE_USER_EMAIL", "unknown"));
 
             File resultsDir = new File("target/allure-results");
             if (!resultsDir.exists()) {
@@ -50,5 +51,13 @@ public final class TestConfig {
         } catch (IOException e) {
             throw new RuntimeException("Erro ao criar environment.properties do Allure", e);
         }
+    }
+
+    private static String getEnvOrDefault(String name, String defaultValue) {
+        String value = System.getenv(name);
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        return value;
     }
 }

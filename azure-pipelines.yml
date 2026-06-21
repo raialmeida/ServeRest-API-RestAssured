@@ -52,8 +52,9 @@ jobs:
           projectName: 'test-api-serverest'
           qualifyImageNames: false
           detached: false
+          arguments: '--entrypoint sh'
           containerCommand: >
-            sh -c 'mvn test;
+            -c 'mvn test;
             status=$?;
             chmod -R a+rwX /app/target/allure-results /app/target/surefire-reports 2>/dev/null || true;
             exit $status'

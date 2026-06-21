@@ -42,18 +42,6 @@ jobs:
     condition: succeeded('Build')
     displayName: "Execução dos testes"
     steps:
-      - script: |
-          HOST_UID=`id -u`
-          HOST_GID=`id -g`
-          echo "##vso[task.setvariable variable=HOST_UID]$HOST_UID"
-          echo "##vso[task.setvariable variable=HOST_GID]$HOST_GID"
-          echo "Container user: $HOST_UID:$HOST_GID"
-        displayName: "Detect agent user"
-
-      - script: |
-          mkdir -p allure-results target/surefire-reports
-        displayName: "Prepare test result folders"
-
       - task: DockerCompose@1
         displayName: "Start Containers and Run Tests"
         inputs:
@@ -64,7 +52,11 @@ jobs:
           projectName: 'test-api-serverest'
           qualifyImageNames: false
           detached: false
-          containerCommand: 'mvn test'
+          containerCommand: >
+            sh -c 'mvn test;
+            status=$?;
+            chmod -R a+rwX /app/target/allure-results /app/target/surefire-reports 2>/dev/null || true;
+            exit $status'
 
       - task: PublishAllureReport@1
         displayName: "Publish allure report"

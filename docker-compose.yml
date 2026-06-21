@@ -2,11 +2,6 @@ services:
   test-api-serverest:
     image: test-api-serverest
     build: .
-    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
-    environment:
-      HOME: /tmp
-      MAVEN_CONFIG: /tmp/.m2
-      MAVEN_OPTS: "-Duser.home=/tmp"
     volumes:
       - ./allure-results:/app/target/allure-results
       - ./target/surefire-reports:/app/target/surefire-reports

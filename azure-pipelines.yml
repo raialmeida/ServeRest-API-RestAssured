@@ -52,7 +52,7 @@ jobs:
           projectName: 'test-api-serverest'
           qualifyImageNames: false
           detached: false
-          arguments: '--entrypoint sh'
+          entrypoint: 'sh'
           containerCommand: >
             -c 'mvn test;
             status=$?;

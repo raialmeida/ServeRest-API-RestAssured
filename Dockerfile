@@ -9,3 +9,6 @@ COPY pom.xml /app/pom.xml
 
 # Copie o código de teste para o contêiner
 COPY src /app/src
+
+RUN mkdir -p /app/target /tmp/.m2 \
+    && chmod -R a+rwX /app/target /tmp/.m2

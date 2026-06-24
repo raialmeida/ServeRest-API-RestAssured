@@ -27,12 +27,12 @@ pool:
 
 jobs:
   - job: Teste
-    displayName: "Execução dos testes sem Docker"
+    displayName: "Execução dos testes"
     steps:
-      - task: Maven@3
+      - task: Maven@4
         displayName: "Run automated tests"
         inputs:
-          mavenPomFile: "pom.xml"
+          mavenPOMFile: "pom.xml"
           goals: "test"
           options: "-B"
           mavenVersionOption: 'Default'

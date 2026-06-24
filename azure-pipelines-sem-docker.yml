@@ -1,0 +1,50 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - "*"
+
+schedules:
+  - cron: "0 10 * * 1-5"
+    displayName: "Scheduled daily"
+    branches:
+      include:
+        - main
+    always: true
+
+variables:
+  PIPELINE_USER: "$(Build.RequestedFor)"
+  PIPELINE_USER_EMAIL: "$(Build.RequestedForEmail)"
+
+pool:
+  name: Teste
+  demands:
+    - Agent.Name -equals wsl_linux_pc
+
+jobs:
+  - job: Teste
+    displayName: "Execução dos testes sem Docker"
+    steps:
+      - task: Maven@3
+        displayName: "Run automated tests"
+        inputs:
+          mavenPomFile: "pom.xml"
+          goals: "test"
+          options: "-B"
+          mavenVersionOption: 'Default'
+          publishJUnitResults: true
+        env:
+          PIPELINE_USER: "$(PIPELINE_USER)"
+          PIPELINE_USER_EMAIL: "$(PIPELINE_USER_EMAIL)"
+
+      - task: PublishAllureReport@1
+        displayName: "Publish allure report"
+        condition: always()
+        inputs:
+          testResultsDir: "$(Build.SourcesDirectory)/target/allure-results"
+          allureVersion: "2.35.1"
+          reportName: "Report Allure"

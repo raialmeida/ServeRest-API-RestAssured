@@ -34,6 +34,6 @@ public class PostProdutosTest extends Hooks {
         PostProdutosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
-                .body(SchemaValidator.matchesSchema("services/produtos/schema/PostProdutosSchema.json"));
+                .body(SchemaValidator.matchesSchema("PostProdutosSchema.json"));
     }
 }

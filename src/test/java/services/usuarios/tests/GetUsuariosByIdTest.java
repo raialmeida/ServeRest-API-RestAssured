@@ -32,6 +32,6 @@ public class GetUsuariosByIdTest extends Hooks {
         GetUsuariosByIdRequest.enviar(idUsuario)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/usuarios/schema/GetUsuariosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("GetUsuariosByIdSchema.json"));
     }
 }

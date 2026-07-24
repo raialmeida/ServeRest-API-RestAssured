@@ -42,6 +42,6 @@ public class GetCarrinhosByIdTest extends Hooks {
         GetCarrinhosByIdRequest.enviar(idCarrinho)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/carrinhos/schema/GetCarrinhosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("GetCarrinhosByIdSchema.json"));
     }
 }

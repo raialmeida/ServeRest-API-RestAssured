@@ -38,6 +38,6 @@ public class DeleteCarrinhosConcluirCompraTest extends Hooks {
                 .assertThat()
                 .statusCode(200)
                 .body(SchemaValidator
-                        .matchesSchema("services/carrinhos/schema/DeleteCarrinhosConcluirCompraSchema.json"));
+                        .matchesSchema("DeleteCarrinhosConcluirCompraSchema.json"));
     }
 }

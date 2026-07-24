@@ -34,6 +34,6 @@ public class PostUsuariosTest extends Hooks {
         PostUsuariosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
-                .body(SchemaValidator.matchesSchema("services/usuarios/schema/PostUsuariosSchema.json"));
+                .body(SchemaValidator.matchesSchema("PostUsuariosSchema.json"));
     }
 }

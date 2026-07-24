@@ -32,6 +32,6 @@ public class DeleteProdutosByIdTest extends Hooks {
         DeleteProdutosByIdRequest.enviar(idProduto)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/produtos/schema/DeleteProdutosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("DeleteProdutosByIdSchema.json"));
     }
 }

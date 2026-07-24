@@ -35,6 +35,6 @@ public class PutProdutosByIdTest extends Hooks {
         PutProdutosByIdRequest.enviar(idProduto, payload)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/produtos/schema/PutProdutosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("PutProdutosByIdSchema.json"));
     }
 }

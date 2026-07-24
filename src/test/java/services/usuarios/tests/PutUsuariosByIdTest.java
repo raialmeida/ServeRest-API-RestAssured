@@ -3,6 +3,7 @@ package services.usuarios.tests;
 import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import config.Hooks;
@@ -35,6 +36,6 @@ public class PutUsuariosByIdTest extends Hooks {
         PutUsuariosByIdRequest.enviar(idUsuario, payload)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/usuarios/schema/PutUsuariosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("PutUsuariosByIdSchema.json"));
     }
 }

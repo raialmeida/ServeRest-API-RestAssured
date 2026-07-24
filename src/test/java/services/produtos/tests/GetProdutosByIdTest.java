@@ -32,6 +32,6 @@ public class GetProdutosByIdTest extends Hooks {
         GetProdutosByIdRequest.enviar(idProduto)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/produtos/schema/GetProdutosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("GetProdutosByIdSchema.json"));
     }
 }

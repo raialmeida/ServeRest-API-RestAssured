@@ -32,6 +32,6 @@ public class DeleteUsuariosByIdTest extends Hooks {
         DeleteUsuariosByIdRequest.enviar(idUsuario)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/usuarios/schema/DeleteUsuariosByIdSchema.json"));
+                .body(SchemaValidator.matchesSchema("DeleteUsuariosByIdSchema.json"));
     }
 }

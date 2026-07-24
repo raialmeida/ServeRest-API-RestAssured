@@ -41,6 +41,6 @@ public class PostCarrinhosTest extends Hooks {
         PostCarrinhosRequest.enviar(payload)
                 .assertThat()
                 .statusCode(201)
-                .body(SchemaValidator.matchesSchema("services/carrinhos/schema/PostCarrinhosSchema.json"));
+                .body(SchemaValidator.matchesSchema("PostCarrinhosSchema.json"));
     }
 }

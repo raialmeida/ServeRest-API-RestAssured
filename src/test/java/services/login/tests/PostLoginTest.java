@@ -36,6 +36,6 @@ public class PostLoginTest extends Hooks {
         PostLoginRequest.enviar(payload)
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/login/schema/PostLoginSchema.json"));
+                .body(SchemaValidator.matchesSchema("PostLoginSchema.json"));
     }
 }

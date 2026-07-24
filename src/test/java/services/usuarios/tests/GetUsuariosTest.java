@@ -31,6 +31,6 @@ public class GetUsuariosTest extends Hooks {
         GetUsuariosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/usuarios/schema/GetUsuariosSchema.json"));
+                .body(SchemaValidator.matchesSchema("GetUsuariosSchema.json"));
     }
 }

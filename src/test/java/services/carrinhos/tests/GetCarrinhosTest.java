@@ -29,6 +29,6 @@ public class GetCarrinhosTest extends Hooks {
         GetCarrinhosRequest.enviar()
                 .assertThat()
                 .statusCode(200)
-                .body(SchemaValidator.matchesSchema("services/carrinhos/schema/GetCarrinhosSchema.json"));
+                .body(SchemaValidator.matchesSchema("GetCarrinhosSchema.json"));
     }
 }

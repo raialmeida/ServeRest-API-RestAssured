@@ -34,8 +34,8 @@ public final class TestConfig {
     private static void writeAllureEnvironment() {
         try {
             Properties props = new Properties();
-            props.setProperty("Ambiente", System.getProperty("profile.name"));
-            props.setProperty("BaseURL", Environment.getEnv("baseURI"));
+            props.setProperty("Ambiente", Environment.getName());
+            props.setProperty("BaseURL", Environment.getEnv("BASE_URI"));
             props.setProperty("OS", System.getProperty("os.name"));
             props.setProperty("User", System.getProperty("user.name"));
 

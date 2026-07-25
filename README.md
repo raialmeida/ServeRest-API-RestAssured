@@ -90,7 +90,18 @@ mvn test
 
 ### Ambiente staging
 ```bash
-mvn test -P staging
+mvn test -Denv=staging
+```
+
+O ambiente `dev` é usado por padrão. As configurações ficam em
+`src/test/resources/config-<ambiente>.properties`.
+
+Uma configuração pode ser sobrescrita por propriedade Java ou variável de
+ambiente, sem alterar os arquivos versionados:
+
+```bash
+mvn test -DBASE_URI=http://localhost:3000
+BASE_URI=http://localhost:3000 mvn test
 ```
 
 ### Para executar os testes de acordo com a tag no teste
@@ -119,10 +130,10 @@ Para construir a imagem e executar todos os testes:
 docker compose run --rm test-api-serverest mvn test
 ```
 
-Para executar os testes em um ambiente específico, informe o profile Maven desejado:
+Para executar os testes em um ambiente específico, informe o ambiente desejado:
 
 ```bash
-docker compose run --rm test-api-serverest mvn test -P staging
+docker compose run --rm test-api-serverest mvn test -Denv=staging
 ```
 
 Para executar os testes por tag/grupo:
@@ -297,4 +308,3 @@ Operações cobertas:
 - GET /carrinhos/{_id}
 - DELETE /carrinhos/concluir-compra
 - DELETE /carrinhos/cancelar-compra
-

@@ -9,7 +9,7 @@ public class RequestBase {
 
     public static RequestSpecification spec() {
         return new RequestSpecBuilder()
-                .setBaseUri(Environment.getEnv("baseURI"))
+                .setBaseUri(Environment.getEnv("BASE_URI"))
                 .setContentType(ContentType.JSON)
                 .build();
     }

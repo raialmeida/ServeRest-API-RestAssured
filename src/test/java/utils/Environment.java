@@ -1,43 +1,65 @@
 package utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
-public class Environment {
+public final class Environment {
+    private static final String DEFAULT_ENV = "dev";
+    private static final String CONFIG_FILE_PATTERN = "config-%s.properties";
     private static final Properties properties = new Properties();
-    private static boolean loaded = false;
+    private static boolean loaded;
     private static String loadedEnv;
+    private static String loadedResource;
 
     private Environment() {
     }
 
-    private static void loadProperties() {
+    private static synchronized void loadProperties() {
         if (loaded) {
             return;
         }
 
-        String env = System.getProperty("env");
-        if (env == null || env.isBlank()) {
-            env = "src/test/resources/dev.properties";
+        loadedEnv = System.getProperty("env", DEFAULT_ENV).trim();
+        if (loadedEnv.isBlank()) {
+            loadedEnv = DEFAULT_ENV;
         }
 
-        try (FileInputStream input = new FileInputStream(env)) {
+        loadedResource = CONFIG_FILE_PATTERN.formatted(loadedEnv);
+
+        try (InputStream input = Environment.class.getClassLoader().getResourceAsStream(loadedResource)) {
+            if (input == null) {
+                throw new IllegalStateException(
+                        "Arquivo de configuração não encontrado em resource: " + loadedResource);
+            }
             properties.load(input);
             loaded = true;
-            loadedEnv = env;
-            System.out.println("Arquivo de ambiente carregado: " + env);
+            System.out.println("Ambiente carregado: " + loadedEnv + " (" + loadedResource + ")");
         } catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar arquivo de ambiente: " + env, e);
+            throw new IllegalStateException("Erro ao carregar configuração: " + loadedResource, e);
         }
     }
 
     public static String getEnv(String key) {
         loadProperties();
-        String value = properties.getProperty(key);
+
+        String value = System.getProperty(key);
         if (value == null || value.isBlank()) {
-            throw new RuntimeException("Chave '" + key + "' não encontrada no arquivo: " + loadedEnv);
+            value = System.getenv(key);
         }
-        return value;
+        if (value == null || value.isBlank()) {
+            value = properties.getProperty(key);
+        }
+
+        if (value == null || value.isBlank()) {
+            throw new IllegalStateException(
+                    "Variável '" + key + "' não encontrada para o ambiente: " + loadedEnv);
+        }
+        return value.trim();
+    }
+
+    public static String getName() {
+        loadProperties();
+        return loadedEnv;
     }
 }

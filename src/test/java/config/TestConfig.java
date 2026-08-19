@@ -24,9 +24,6 @@ public final class TestConfig {
         RestAssured.filters(new AllureRestAssured());
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
-        System.setProperty("allure.link.issue.pattern", "https://jira.seu-dominio.com/browse/{}");
-        System.setProperty("allure.link.tms.pattern", "https://testrail.seu-dominio.com/cases/view/{}");
-
         writeAllureEnvironment();
         initialized = true;
     }

@@ -15,6 +15,11 @@ public class GetUsuariosRequest {
     public static ValidatableResponse enviar() {
         return given()
                 .spec(RequestBase.spec())
+                // se quiser remover o header Authorization ou outro header da spec requisição, utilize o filtro abaixo
+                .filter((requestSpec, responseSpec, ctx) -> {
+                    requestSpec.removeHeader("Authorization");
+                    return ctx.next(requestSpec, responseSpec);
+                })
                 .when()
                 .get("/usuarios")
                 .then();

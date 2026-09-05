@@ -6,3 +6,5 @@ target/
 .allure/
 allure-results/
 allure-report/
+.env
+.env.*

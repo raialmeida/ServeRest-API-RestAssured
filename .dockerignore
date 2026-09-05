@@ -1,0 +1,12 @@
+.git
+.github
+.codex
+.agents
+.allure
+.idea
+.vscode
+target
+allure-results
+allure-report
+.env
+.env.*

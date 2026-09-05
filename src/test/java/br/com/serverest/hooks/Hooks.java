@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import io.restassured.response.Response;
 import br.com.serverest.utils.UtilsUsuario;
 
-public class Hooks {
+public abstract class Hooks {
 
     protected static Response usuarioAdmin;
 

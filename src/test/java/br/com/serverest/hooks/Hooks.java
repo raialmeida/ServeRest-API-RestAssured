@@ -1,19 +1,29 @@
 package br.com.serverest.hooks;
 
-import br.com.serverest.config.TestConfig;
+import java.sql.SQLException;
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
-import io.restassured.response.Response;
+import br.com.serverest.config.TestConfig;
+import br.com.serverest.database.DatabaseConfig;
 import br.com.serverest.utils.UtilsUsuario;
+import io.restassured.response.Response;
 
 public abstract class Hooks {
 
     protected static Response usuarioAdmin;
 
     @BeforeAll
-    public static void globalSetup() {
+    public static void globalSetup() throws SQLException {
         TestConfig.init();
+        DatabaseConfig.getConnection();
+    }
+
+    @AfterAll
+    public static void globalTearDown() throws SQLException {
+        DatabaseConfig.fecharConexao();
     }
 
     @BeforeEach

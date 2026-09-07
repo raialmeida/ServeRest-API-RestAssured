@@ -18,12 +18,12 @@ public abstract class Hooks {
     @BeforeAll
     public static void globalSetup() throws SQLException {
         TestConfig.init();
-        DatabaseConfig.getConnection();
+       // DatabaseConfig.getConnection();
     }
 
     @AfterAll
     public static void globalTearDown() throws SQLException {
-        DatabaseConfig.fecharConexao();
+       // DatabaseConfig.fecharConexao();
     }
 
     @BeforeEach

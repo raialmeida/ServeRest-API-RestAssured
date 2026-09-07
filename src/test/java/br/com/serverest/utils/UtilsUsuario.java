@@ -1,7 +1,6 @@
 package br.com.serverest.utils;
 
-import br.com.serverest.services.login.payloads.PostLoginPayload;
-import br.com.serverest.services.login.requests.PostLoginRequest;
+import br.com.serverest.auth.AuthConfig;
 import br.com.serverest.services.usuarios.payloads.PostUsuariosPayload;
 import br.com.serverest.services.usuarios.requests.PostUsuariosRequest;
 import com.github.javafaker.Faker;
@@ -11,8 +10,6 @@ import io.restassured.response.Response;
 public class UtilsUsuario {
 
     private static final String ADMIN_NOME = "Admin ServeRest";
-    private static final String ADMIN_EMAIL = "rateste@qa.com.br";
-    private static final String ADMIN_PASSWORD = "teste";
     private static final Faker faker = new Faker();
 
     private UtilsUsuario() {
@@ -22,8 +19,8 @@ public class UtilsUsuario {
     public static Response criarUsuarioAdmin() {
         String payload = PostUsuariosPayload.payload(
                 ADMIN_NOME,
-                ADMIN_EMAIL,
-                ADMIN_PASSWORD,
+                AuthConfig.usuario(),
+                AuthConfig.senha(),
                 true);
 
         Response response = PostUsuariosRequest.enviar(payload).extract().response();
@@ -38,10 +35,7 @@ public class UtilsUsuario {
 
     @Step("Obtendo token do usuário administrador")
     public static String getTokenAdmin() {
-
-        return PostLoginRequest.enviar(PostLoginPayload.payload(ADMIN_EMAIL, ADMIN_PASSWORD))
-                .extract()
-                .path("authorization");
+        return AuthConfig.token();
     }
 
     @Step("Criando usuário dinâmico")
@@ -66,9 +60,7 @@ public class UtilsUsuario {
                     + response.statusCode() + " Body: " + response.asString());
         }
 
-        return PostLoginRequest.enviar(PostLoginPayload.payload(email, password))
-                .extract()
-                .path("authorization");
+        return AuthConfig.token(email, password);
     }
 
     @Step("Criando usuário dinâmico e retornando token")

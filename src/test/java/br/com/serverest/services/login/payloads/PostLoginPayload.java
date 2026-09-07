@@ -1,5 +1,6 @@
 package br.com.serverest.services.login.payloads;
 
+import br.com.serverest.auth.AuthConfig;
 import jakarta.json.Json;
 
 public class PostLoginPayload {
@@ -8,7 +9,7 @@ public class PostLoginPayload {
     }
 
     public static String payload() {
-        return payload("rateste@qa.com.br", "teste");
+        return payload(AuthConfig.usuario(), AuthConfig.senha());
     }
 
     public static String payload(String email, String password) {

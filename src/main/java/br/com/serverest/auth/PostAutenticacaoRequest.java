@@ -26,7 +26,7 @@ public final class PostAutenticacaoRequest {
                 .contentType(ContentType.JSON)
                 .body(payload)
                 .when()
-                .post(AuthConfig.endpoint())
+                .post("/login")
                 .then();
     }
 }

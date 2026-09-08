@@ -104,6 +104,15 @@ mvn test -DBASE_URI=http://localhost:3000
 BASE_URI=http://localhost:3000 mvn test
 ```
 
+O token é obtido pelo `AuthConfig` em `AUTH_ENDPOINT` (padrão `/login`).
+O administrador criado pelos testes usa `AUTH_USUARIO` e `AUTH_SENHA` do
+ambiente selecionado; esses valores também podem ser sobrescritos externamente.
+`UtilsUsuario.getTokenAdmin()` retorna o campo `authorization` completo
+(`Bearer ...`), usado no header `Authorization` das requisições protegidas.
+Usuários dinâmicos são autenticados com suas próprias credenciais por
+`AuthConfig.token(email, password)`. A especificação base não envia token;
+as classes de requisição protegidas adicionam o token correspondente ao usuário.
+
 ### Para executar os testes de acordo com a tag no teste
 
 ```

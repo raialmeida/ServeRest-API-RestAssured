@@ -8,10 +8,6 @@ public final class AuthConfig {
     private AuthConfig() {
     }
 
-    public static String endpoint() {
-        return Environment.getEnv("AUTH_ENDPOINT");
-    }
-
     public static String usuario() {
         return Environment.getEnv("AUTH_USUARIO");
     }

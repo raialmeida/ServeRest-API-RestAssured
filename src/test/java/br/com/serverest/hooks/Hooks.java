@@ -16,9 +16,8 @@ public abstract class Hooks {
     protected static Response usuarioAdmin;
 
     @BeforeAll
-    public static void globalSetup() throws SQLException {
+    public static void globalSetup() {
         TestConfig.init();
-        DatabaseConfig.getConnection();
     }
 
     @AfterAll

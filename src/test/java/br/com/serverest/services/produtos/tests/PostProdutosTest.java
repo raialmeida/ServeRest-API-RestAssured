@@ -4,6 +4,7 @@ import static io.qameta.allure.SeverityLevel.CRITICAL;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +41,7 @@ public class PostProdutosTest extends Hooks {
         //         "SELECT Id, Nome, Preco, Descricao, Quantidade FROM dbo.Produtos WHERE Id = ?",
         //         produtoId);
 
+        // assertThat("O cadastro deve gravar um produto com o ID retornado pela API", produto, hasSize(1));
         // assertThat(produto.get(0).get("Id"), equalTo(produtoId));
         // assertThat(produto.get(0).get("Nome"), equalTo(JsonPath.from(payload).getString("nome")));
         // assertThat(produto.get(0).get("Preco"), equalTo(JsonPath.from(payload).getInt("preco")));

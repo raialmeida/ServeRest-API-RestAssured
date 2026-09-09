@@ -138,35 +138,116 @@ Usuários dinâmicos são autenticados com suas próprias credenciais por
 `Authorization` de exemplo (`Bearer your_token_here_default`); as requisições
 protegidas sobrescrevem esse valor com o token correspondente ao usuário.
 
-O acesso ao SQL Server é opcional. O exemplo de consulta e validação de persistência
-em `PostProdutosTest` está comentado, portanto os testes atuais de API não exigem
-uma base configurada. Para usar consultas ao banco, preencha as propriedades no
-arquivo do ambiente escolhido ou forneça os valores externamente:
+A configuração de SQL Server e PostgreSQL está no projeto apenas como exemplo
+de acesso a banco de dados. A proposta dos testes ServeRest é validar a API;
+essa configuração não é usada para comprovar a persistência das requisições.
+As bases locais e os exemplos abaixo servem para exercitar conexões, consultas
+e alterações de dados.
+
+Há trechos demonstrativos para validação de banco comentados em `PostProdutosTest`. Enquanto forem
+executados, esses trechos exigem os bancos locais configurados, mesmo sendo
+exercícios independentes da validação da API.
+
+Para experimentar a configuração, preencha as propriedades no arquivo do
+ambiente escolhido ou forneça os valores externamente. Exemplo para SQL Server:
 
 ```properties
-DB_URL=jdbc:sqlserver://servidor:1433;encrypt=true
-DB_NAME=NomeDaBase
-DB_USER=usuario_db
-DB_PASSWORD=sua_senha
+SQLSERVER_DB_URL=jdbc:sqlserver://servidor:1433;encrypt=true
+SQLSERVER_DB_NAME=NomeDaBase
+SQLSERVER_DB_USER=usuario_db
+SQLSERVER_DB_PASSWORD=sua_senha
+```
+
+Para PostgreSQL, preencha suas próprias variáveis no mesmo arquivo de ambiente:
+
+```properties
+POSTGRES_DB_URL=jdbc:postgresql://servidor:5432/
+POSTGRES_DB_NAME=NomeDaBase
+POSTGRES_DB_USER=usuario_db
+POSTGRES_DB_PASSWORD=sua_senha
 ```
 
 Os valores acima são exemplos e devem corresponder à instância utilizada.
-`DB_NAME` é enviado separadamente nas propriedades da conexão; não é necessário
-inserir `${DB_NAME}` na URL. Para escolher outra base na execução:
+Cada método usa diretamente a configuração do seu banco. Por padrão, a base vem de
+`POSTGRES_DB_NAME` ou `SQLSERVER_DB_NAME`. O nome definido na configuração ou passado
+à sobrecarga com `nomeBase` prevalece sobre a base da URL, sem necessidade de placeholders.
+Para alterar a variável da base PostgreSQL na execução:
 
 ```bash
-mvn test -Denv=hml -DDB_NAME=OutraBase
+mvn test -Denv=hml -DPOSTGRES_DB_NAME=OutraBase
 ```
 
-`DatabaseConfig` abre a conexão na primeira consulta ou alteração e a reutiliza
-nas próximas chamadas. O `@BeforeAll` de `Hooks` inicializa a configuração dos
-testes; o `@AfterAll` fecha a conexão ao terminar cada classe, somente se ela tiver
-sido aberta. Cenários sem acesso ao banco não abrem conexão. O reuso utiliza uma
-conexão compartilhada durante a execução sequencial, sem pool.
+O cenário escolhe o banco pelo método e passa a base como primeiro argumento:
 
-Para validar a persistência de uma requisição, a conexão deve apontar para a base
-utilizada pela API testada. Uma base SQL Server independente serve para exercícios
-de consulta, mas não recebe automaticamente os dados enviados à API pública.
+```java
+import br.com.serverest.config.Environment;
+
+// Dentro do cenário:
+var produtosPostgres = DatabaseConfig.postgresQuery(
+        Environment.getEnv("POSTGRES_DB_NAME"),
+        "SELECT id AS \"Id\", nome AS \"Nome\" FROM public.produtos WHERE id = ?",
+        produtoId);
+
+var produtosSqlServer = DatabaseConfig.sqlServerQuery(
+        Environment.getEnv("SQLSERVER_DB_NAME"),
+        "SELECT Id, Nome FROM dbo.Produtos WHERE Id = ?",
+        produtoId);
+```
+
+O nome da base pode vir de qualquer variável do ambiente, permitindo escolher
+outra base em um cenário específico. As sobrecargas sem o argumento `nomeBase`
+usam `POSTGRES_DB_NAME` ou `SQLSERVER_DB_NAME` automaticamente.
+
+Se a chamada não informar a base e o primeiro valor após o SQL for uma `String`,
+agrupe os valores em `new Object[]{...}` para selecionar a sobrecarga correta.
+Com a base explícita, ou com um `int` como primeiro valor após o SQL, os valores
+podem ser passados diretamente. Sem parâmetros, basta chamar `postgresQuery(sql)`
+ou `sqlServerQuery(sql)`. Esse cuidado com as sobrecargas Java não altera os tipos
+das colunas do banco.
+
+Para inserir, atualizar ou excluir dados, use o método de alteração do banco:
+
+```java
+int linhasPostgres = DatabaseConfig.postgresExecuteUpdate(
+        "UPDATE public.produtos SET quantidade = ? WHERE id = ?",
+        new Object[]{novaQuantidade, produtoId});
+
+int linhasSqlServer = DatabaseConfig.sqlServerExecuteUpdate(
+        Environment.getEnv("SQLSERVER_DB_NAME"),
+        "UPDATE dbo.Produtos SET Quantidade = ? WHERE Id = ?",
+        novaQuantidade, produtoId);
+```
+
+Cada chamada retorna um `int` com a quantidade de linhas afetadas. Para informar
+outra base, use as sobrecargas `postgresExecuteUpdate(nomeBase, sql, parametros)` ou
+`sqlServerExecuteUpdate(nomeBase, sql, parametros)`. O mesmo cuidado com o array
+vale para alterações sem base explícita cujo primeiro valor após o SQL seja `String`.
+
+`DatabaseConfig` mantém uma conexão por banco, aberta apenas quando utilizada.
+Operações seguintes à mesma base reutilizam a conexão. Trocar a base de um banco
+reabre somente sua conexão; a conexão do outro banco permanece aberta.
+O `@BeforeAll` de `Hooks` inicializa a configuração dos testes; o `@AfterAll`
+fecha as duas conexões ao terminar cada classe.
+Cenários sem acesso ao banco não abrem conexão. O reuso é destinado à execução
+sequencial, sem pool.
+
+As bases locais de exemplo são independentes da API pública ServeRest e não
+recebem os dados enviados nas requisições. Seus registros servem apenas para
+demonstrar o funcionamento da configuração de banco.
+
+As queries devem usar os schemas, tabelas e tipos da base escolhida. O exemplo
+SQL Server em `PostProdutosTest` usa `dbo.Produtos`. Em PostgreSQL,
+se a tabela estiver em `public.produtos`, uma consulta equivalente pode usar:
+
+```java
+var produtos = DatabaseConfig.postgresQuery(
+        Environment.getEnv("POSTGRES_DB_NAME"),
+        "SELECT id AS \"Id\", nome AS \"Nome\" FROM public.produtos WHERE id = ?",
+        produtoId);
+```
+
+Os aliases entre aspas preservam as chaves `Id` e `Nome` no resultado. O retorno
+continua sendo `List<Map<String, Object>>`, e as asserções ficam no teste.
 
 ### Para executar os testes de acordo com a tag no teste
 
@@ -234,15 +315,24 @@ As configurações e o ciclo de vida dos testes ficam distribuídos nestes arqui
 - `config/TestConfig.java`: configura os filtros e logs do RestAssured e os metadados do Allure.
 - `http/RequestSpec.java`: centraliza `baseURI`, `Content-Type` e os headers padrão.
 - `auth/AuthConfig.java` e `auth/PostAutenticacaoRequest.java`: leem as credenciais e autenticam os usuários.
-- `database/DatabaseConfig.java`: gerencia a conexão JDBC e executa consultas e alterações parametrizadas.
-- `hooks/Hooks.java`, em `src/test/java/br/com/serverest`: inicializa a configuração, prepara o administrador quando necessário e fecha a conexão existente no `@AfterAll`.
+- `database/DatabaseConfig.java`: exemplo de configuração JDBC para SQL Server e PostgreSQL, com consultas e alterações parametrizadas.
+- `hooks/Hooks.java`, em `src/test/java/br/com/serverest`: inicializa a configuração, prepara o administrador quando necessário e fecha as conexões existentes no `@AfterAll`.
 
-`DatabaseConfig.queryConsultar(sql, parametros)` retorna `List<Map<String, Object>>`:
+`postgresQuery(sql, parametros)` e `sqlServerQuery(sql, parametros)`
+retornam `List<Map<String, Object>>`:
 cada item representa uma linha, com nomes de colunas como chaves. Retorna todas as
 linhas encontradas ou uma lista vazia. Os valores informados após o SQL preenchem
-os `?` na mesma ordem. `executeUpdate(sql, parametros)` executa `INSERT`, `UPDATE`
-ou `DELETE` e retorna a quantidade de linhas afetadas. As validações dos dados
-ficam nos cenários de teste.
+os `?` na mesma ordem.
+
+`postgresExecuteUpdate(sql, parametros)` e
+`sqlServerExecuteUpdate(sql, parametros)` executam `INSERT`, `UPDATE`
+ou `DELETE` no banco correspondente e na base configurada no ambiente. Ambos retornam um `int`
+com a quantidade de linhas afetadas e usam parâmetros na mesma ordem dos `?`.
+As sobrecargas dos mesmos métodos recebem `nomeBase` antes do SQL para escolher
+outra base. Sem base explícita, um `Object[]` evita a seleção indevida da sobrecarga
+quando o primeiro valor após o SQL for `String`.
+Esses métodos demonstram o acesso a banco e não fazem parte da proposta de
+validação de persistência da API neste projeto.
 
 ### services
 

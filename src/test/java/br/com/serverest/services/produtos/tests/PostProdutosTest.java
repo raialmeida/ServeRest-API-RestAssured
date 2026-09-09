@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import br.com.serverest.config.Environment;
 import br.com.serverest.database.DatabaseConfig;
 import br.com.serverest.hooks.Hooks;
 import br.com.serverest.services.produtos.payloads.PostProdutosPayload;
@@ -37,7 +38,8 @@ public class PostProdutosTest extends Hooks {
                 .extract()
                 .path("_id");
 
-        // var produto = DatabaseConfig.queryConsultar(
+        // var produto = DatabaseConfig.sqlServerQuery(
+        //         Environment.getEnv("SQLSERVER_DB_NAME"),
         //         "SELECT Id, Nome, Preco, Descricao, Quantidade FROM dbo.Produtos WHERE Id = ?",
         //         produtoId);
 

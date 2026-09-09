@@ -12,55 +12,166 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.postgresql.ds.PGSimpleDataSource;
+
 import br.com.serverest.config.Environment;
 
 public final class DatabaseConfig {
 
-    private static Connection connection;
+    private static Connection postgresConnection;
+    private static Connection sqlServerConnection;
+    private static String postgresBase;
+    private static String sqlServerBase;
 
     private DatabaseConfig() {
     }
 
     /**
-     * Abre a conexão quando necessário e a reutiliza até o fim da classe de testes.
+     * Abre e reutiliza a conexão PostgreSQL para a base informada.
      */
-    public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            Properties propriedades = new Properties();
-            propriedades.setProperty("databaseName", Environment.getEnv("DB_NAME"));
-            propriedades.setProperty("user", Environment.getEnv("DB_USER"));
-            propriedades.setProperty("password", Environment.getEnv("DB_PASSWORD"));
-            connection = DriverManager.getConnection(Environment.getEnv("DB_URL"), propriedades);
+    private static Connection getPostgresConnection(String nomeBase) throws SQLException {
+        if (nomeBase == null || nomeBase.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome da base.");
         }
-        return connection;
+        if (postgresConnection == null || postgresConnection.isClosed() || !nomeBase.equals(postgresBase)) {
+            if (postgresConnection != null) {
+                postgresConnection.close();
+            }
+            PGSimpleDataSource dataSource = new PGSimpleDataSource();
+            dataSource.setUrl(Environment.getEnv("POSTGRES_DB_URL"));
+            dataSource.setDatabaseName(nomeBase);
+            dataSource.setUser(Environment.getEnv("POSTGRES_DB_USER"));
+            dataSource.setPassword(Environment.getEnv("POSTGRES_DB_PASSWORD"));
+            postgresConnection = dataSource.getConnection();
+            postgresBase = nomeBase;
+        }
+        return postgresConnection;
     }
 
-    /** Fecha a conexão no AfterAll da classe de testes. */
+    /** Abre e reutiliza a conexão SQL Server para a base informada. */
+    private static Connection getSqlServerConnection(String nomeBase) throws SQLException {
+        if (nomeBase == null || nomeBase.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome da base.");
+        }
+        if (sqlServerConnection == null || sqlServerConnection.isClosed() || !nomeBase.equals(sqlServerBase)) {
+            if (sqlServerConnection != null) {
+                sqlServerConnection.close();
+            }
+            Properties propriedades = new Properties();
+            propriedades.setProperty("databaseName", nomeBase);
+            propriedades.setProperty("user", Environment.getEnv("SQLSERVER_DB_USER"));
+            propriedades.setProperty("password", Environment.getEnv("SQLSERVER_DB_PASSWORD"));
+            sqlServerConnection = DriverManager.getConnection(Environment.getEnv("SQLSERVER_DB_URL"), propriedades);
+            sqlServerBase = nomeBase;
+        }
+        return sqlServerConnection;
+    }
+
+    /** Fecha as duas conexões no AfterAll, mesmo se o fechamento de uma falhar. */
     public static void fecharConexao() throws SQLException {
-        if (connection != null) {
-            connection.close();
-            connection = null;
+        try (Connection postgres = postgresConnection; Connection sqlServer = sqlServerConnection) {
+            postgresConnection = null;
+            sqlServerConnection = null;
+            postgresBase = null;
+            sqlServerBase = null;
         }
     }
 
     /**
-     * Executa INSERT, UPDATE ou DELETE parametrizado e retorna as linhas afetadas.
+     * Executa INSERT, UPDATE ou DELETE usando POSTGRES_DB_NAME do ambiente.
+     * Retorna a quantidade de linhas afetadas.
      */
-    public static int executeUpdate(String sql, Object... parametros) {
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            preencherParametros(statement, parametros);
+    public static int postgresExecuteUpdate(String sql, Object... parametros) {
+        return postgresExecuteUpdate(Environment.getEnv("POSTGRES_DB_NAME"), sql, parametros);
+    }
+
+    /**
+     * Executa INSERT, UPDATE ou DELETE na base PostgreSQL informada.
+     * Retorna a quantidade de linhas afetadas.
+     */
+    public static int postgresExecuteUpdate(String nomeBase, String sql, Object... parametros) {
+        try (PreparedStatement statement = getPostgresConnection(nomeBase).prepareStatement(sql)) {
+            for (int indice = 0; indice < parametros.length; indice++) {
+                statement.setObject(indice + 1, parametros[indice]);
+            }
             return statement.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Erro ao executar alteração no banco de dados." + e.getMessage(), e);
+            throw new IllegalStateException("Erro ao executar alteração no banco de dados: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Retorna todas as linhas da consulta; sem resultados, retorna uma lista vazia.
+     * Executa INSERT, UPDATE ou DELETE usando SQLSERVER_DB_NAME do ambiente.
+     * Retorna a quantidade de linhas afetadas.
      */
-    public static List<Map<String, Object>> queryConsultar(String sql, Object... parametros) {
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            preencherParametros(statement, parametros);
+    public static int sqlServerExecuteUpdate(String sql, Object... parametros) {
+        return sqlServerExecuteUpdate(Environment.getEnv("SQLSERVER_DB_NAME"), sql, parametros);
+    }
+
+    /**
+     * Executa INSERT, UPDATE ou DELETE na base SQL Server informada.
+     * Retorna a quantidade de linhas afetadas.
+     */
+    public static int sqlServerExecuteUpdate(String nomeBase, String sql, Object... parametros) {
+        try (PreparedStatement statement = getSqlServerConnection(nomeBase).prepareStatement(sql)) {
+            for (int indice = 0; indice < parametros.length; indice++) {
+                statement.setObject(indice + 1, parametros[indice]);
+            }
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao executar alteração no banco de dados: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Consulta a base definida em POSTGRES_DB_NAME.
+     * Retorna uma lista de registros ou uma lista vazia quando não houver resultados.
+     */
+    public static List<Map<String, Object>> postgresQuery(String sql, Object... parametros) {
+        return postgresQuery(Environment.getEnv("POSTGRES_DB_NAME"), sql, parametros);
+    }
+
+    /**
+     * Consulta a base PostgreSQL informada.
+     * Retorna uma lista de registros ou uma lista vazia quando não houver resultados.
+     */
+    public static List<Map<String, Object>> postgresQuery(String nomeBase, String sql, Object... parametros) {
+        try {
+            return consultar(getPostgresConnection(nomeBase), sql, parametros);
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao consultar o banco de dados: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Consulta a base definida em SQLSERVER_DB_NAME.
+     * Retorna uma lista de registros ou uma lista vazia quando não houver resultados.
+     */
+    public static List<Map<String, Object>> sqlServerQuery(String sql, Object... parametros) {
+        return sqlServerQuery(Environment.getEnv("SQLSERVER_DB_NAME"), sql, parametros);
+    }
+
+    /**
+     * Consulta a base SQL Server informada.
+     * Retorna uma lista de registros ou uma lista vazia quando não houver resultados.
+     */
+    public static List<Map<String, Object>> sqlServerQuery(String nomeBase, String sql, Object... parametros) {
+        try {
+            return consultar(getSqlServerConnection(nomeBase), sql, parametros);
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao consultar o banco de dados: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Executa a consulta com os parâmetros e retorna cada linha como um mapa.
+     */
+    private static List<Map<String, Object>> consultar(Connection conexao, String sql, Object... parametros)
+            throws SQLException {
+        try (PreparedStatement statement = conexao.prepareStatement(sql)) {
+            for (int indice = 0; indice < parametros.length; indice++) {
+                statement.setObject(indice + 1, parametros[indice]);
+            }
             try (ResultSet result = statement.executeQuery()) {
                 List<Map<String, Object>> registros = new ArrayList<>();
                 ResultSetMetaData metadata = result.getMetaData();
@@ -73,14 +184,6 @@ public final class DatabaseConfig {
                 }
                 return registros;
             }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Erro ao consultar o banco de dados: " + e.getMessage(), e);
-        }
-    }
-
-    private static void preencherParametros(PreparedStatement statement, Object... parametros) throws SQLException {
-        for (int indice = 0; indice < parametros.length; indice++) {
-            statement.setObject(indice + 1, parametros[indice]);
         }
     }
 }
